@@ -65,7 +65,7 @@ unsigned char * transpose(unsigned char *arr, int *width, int *height) {
 }
 
 /* Rotates the square array ARR by 90 degrees counterclockwise. */
-unsigned char * rotate_ccw_90(unsigned char *arr, int *width, int *height) {
+void rotate_ccw_90(unsigned char *arr, int *width, int *height) {
     arr = transpose(arr, width, height);
     flip_horizontal(arr, width, height);
 }
@@ -76,8 +76,8 @@ unsigned char * rotate_ccw_90(unsigned char *arr, int *width, int *height) {
 unsigned int least_sum_squares(unsigned char *i1, unsigned char *i2,
         int width, unsigned int *least_sum) {
     unsigned int sum = 0;
-    for (int i; i < (t_width*t_width); i++) {
-        sum += squared_distance(image[i], template[i]);
+    for (int i; i < (width*width); i++) {
+        sum += squared_distance(i1[i], i2[i]);
     }
     if (sum < *least_sum) {
         *least_sum = sum;
@@ -91,9 +91,25 @@ unsigned int least_sum_squares(unsigned char *i1, unsigned char *i2,
 unsigned int calc_min_dist(unsigned char *image, int i_width, int i_height, 
         unsigned char *template, int t_width) {
     unsigned int min_dist = UINT_MAX;
-    unsigned int sum = 0;
-    
-    image = transpose(image, &i_width, &i_height);
+    // 0 degrees
+    least_sum_squares(image, template, t_width, &min_dist);
+    flip_horizontal(image, &i_width, &i_height);    
+    least_sum_squares(image, template, t_width, &min_dist);
+    // 90 degrees
+    rotate_ccw_90(image, &i_width, &i_height);
+    least_sum_squares(image, template, t_width, &min_dist);
+    flip_horizontal(image, &i_width, &i_height);    
+    least_sum_squares(image, template, t_width, &min_dist);
+    // 180 degrees
+    rotate_ccw_90(image, &i_width, &i_height);
+    least_sum_squares(image, template, t_width, &min_dist);
+    flip_horizontal(image, &i_width, &i_height);    
+    least_sum_squares(image, template, t_width, &min_dist);
+    // 270 degrees
+    rotate_ccw_90(image, &i_width, &i_height);
+    least_sum_squares(image, template, t_width, &min_dist);
+    flip_horizontal(image, &i_width, &i_height);    
+    least_sum_squares(image, template, t_width, &min_dist);
     return min_dist;
 }
 
