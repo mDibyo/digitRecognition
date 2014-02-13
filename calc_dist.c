@@ -12,10 +12,14 @@
 #include "digit_rec.h"
 #include "utils.h"
 #include "limits.h"
+// #include <signal.h>
 
 /* Find the squared difference between two pixels */
 unsigned int squared_distance(unsigned char d1, unsigned char d2) {
-	unsigned int distance = d1 - d2;
+	unsigned int distance;
+    distance = d1 - d2;
+    // printf("%d = %d-%d\n", distance, d1, d2);
+    // raise(SIGINT);
 	return (distance * distance);
 }
 
@@ -43,7 +47,6 @@ void flip_horizontal(unsigned char *arr, int *width, int *height) {
     for (int i = 0; i < *height; i++) {
     	for (int j = 0; j < (*width / 2); j++) {
     		swap_char(arr + (*width)*i + j, arr + (*width)*i + (*width) - j - 1);
-   			// swap(arr[i][j], arr[i][width - j - 1]);
    		}
     }
 }
@@ -75,13 +78,29 @@ void rotate_ccw_90(unsigned char *arr, int *width, int *height) {
  */
 unsigned int least_sum_squares(unsigned char *i1, unsigned char *i2,
         int width, unsigned int *least_sum) {
-    unsigned int sum = 0;
-    for (int i; i < (width*width); i++) {
+    // FILE *fp;
+    // fp = fopen("log.txt", "a");
+    // fprintf(fp, "initial sum: %u\n", *least_sum);
+    unsigned int sum = 0, distance;
+    for (int i = 0; i < (width*width); i++) {
+        /*
+        distance = (unsigned int) squared_distance(i1[i], i2[i]);
+        if (distance > 0) {
+            printf("distance: %u\n", distance);
+            fprintf(fp, "distance: %u\n", distance);
+            sum += distance;
+            fprintf(fp, "sum: %u\n", sum);
+        } */
         sum += squared_distance(i1[i], i2[i]);
     }
+    // printf("sum: %u ,", sum);
+    // fprintf(fp, "sum: %u ,", sum);
+    // printf("least sum: %u \n", *least_sum);
+    // fprintf(fp, "least sum: %u \n", *least_sum);
     if (sum < *least_sum) {
         *least_sum = sum;
     }
+    // fclose(fp);
 }
 
 /* Returns the squared Euclidean distance between TEMPLATE and IMAGE. The size of IMAGE
@@ -91,10 +110,12 @@ unsigned int least_sum_squares(unsigned char *i1, unsigned char *i2,
 unsigned int calc_min_dist(unsigned char *image, int i_width, int i_height, 
         unsigned char *template, int t_width) {
     unsigned int min_dist = UINT_MAX;
+    // printf("%u before", min_dist);
     // 0 degrees
     least_sum_squares(image, template, t_width, &min_dist);
     flip_horizontal(image, &i_width, &i_height);    
     least_sum_squares(image, template, t_width, &min_dist);
+    // printf("| %u after \n", min_dist);
     // 90 degrees
     rotate_ccw_90(image, &i_width, &i_height);
     least_sum_squares(image, template, t_width, &min_dist);
