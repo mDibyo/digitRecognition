@@ -40,8 +40,6 @@ void swap_int(int *x, int *y) {
     *y = temp;
 }
 
-
-
 /* Flips the elements of a square array ARR across the y-axis. */
 void flip_horizontal(unsigned char *arr, int *width, int *height) {
     unsigned char width_char = (unsigned char) *width;
@@ -73,7 +71,7 @@ unsigned char * transpose(unsigned char *arr, int *width, int *height) {
 /* Rotates the square array ARR by 90 degrees counterclockwise. */
 void rotate_ccw_90(unsigned char *arr, int *width, int *height) {
     strcpy(arr, transpose(arr, width, height));
-    flip_horizontal(arr, width, height);
+    // flip_horizontal(arr, width, height);
 }
 
 /* Find sum of squares pixel to pixel of two square images of the same size and
@@ -106,6 +104,17 @@ unsigned int least_sum_squares(unsigned char *i1, unsigned char *i2,
     fclose(fp);
 }
 
+unsigned char * extract_portion(unsigned char *image, int i, int j, int width) {
+	unsigned char *portion;
+	portion = (unsigned char*)malloc(sizeof(unsigned char)* width * width);
+	for (int x = 0; x < widht; x++) {
+		for (int y = 0; y < width; y++) {
+			portion[x*width + y] = portion[(i + x)*width + (j + y)];
+		}
+	}
+	return portion;
+}
+
 /* Returns the squared Euclidean distance between TEMPLATE and IMAGE. The size of IMAGE
  * is I_WIDTH * I_HEIGHT, while TEMPLATE is square with side length T_WIDTH. The template
  * image should be flipped, rotated, and translated across IMAGE.
@@ -116,31 +125,36 @@ unsigned int calc_min_dist(unsigned char *image, int i_width, int i_height,
     // printf("%u before", min_dist);
     // printf("+++++++++++ NEW\n");
     // print_bmp(image, i_width, i_height);
-    // 0 degrees
-    least_sum_squares(image, template, t_width, &min_dist);
-    flip_horizontal(image, &i_width, &i_height);    
-    least_sum_squares(image, template, t_width, &min_dist);
-    // printf("| %u after \n", min_dist);
-    // printf("flipped: \n");
-    // print_bmp(image, i_width, i_height);
-    // 90 degrees
-    rotate_ccw_90(image, &i_width, &i_height);
-    // printf("transposed: \n");
-    // print_bmp(image, i_width, i_height);
-    least_sum_squares(image, template, t_width, &min_dist);
-    flip_horizontal(image, &i_width, &i_height);    
-    least_sum_squares(image, template, t_width, &min_dist);
-    // 180 degrees
-    rotate_ccw_90(image, &i_width, &i_height);
-    least_sum_squares(image, template, t_width, &min_dist);
-    flip_horizontal(image, &i_width, &i_height);    
-    least_sum_squares(image, template, t_width, &min_dist);
-    // 270 degrees
-    rotate_ccw_90(image, &i_width, &i_height);
-    least_sum_squares(image, template, t_width, &min_dist);
-    flip_horizontal(image, &i_width, &i_height);    
-    least_sum_squares(image, template, t_width, &min_dist);
-    return min_dist;
+	for (int i = 0; i <= (i_width - t_width); i++) {
+		for (int j = 0; j < (i_height - t_width); j++) {
+			strcpy(portion, extract_portion(image, i, j, t_width));
+			// 0 degrees
+			least_sum_squares(portion, template, t_width, &min_dist);
+			flip_horizontal(portion, &i_width, &i_height);
+			least_sum_squares(portion, template, t_width, &min_dist);
+			// printf("| %u after \n", min_dist);
+			// printf("flipped: \n");
+			// print_bmp(image, i_width, i_height);
+			// 90 degrees
+			rotate_ccw_90(portion, &i_width, &i_height);
+			// printf("transposed: \n");
+			// print_bmp(image, i_width, i_height);
+			least_sum_squares(portion, template, t_width, &min_dist);
+			flip_horizontal(portion, &i_width, &i_height);
+			least_sum_squares(portion, template, t_width, &min_dist);
+			// 180 degrees
+			rotate_ccw_90(portion, &i_width, &i_height);
+			least_sum_squares(portion, template, t_width, &min_dist);
+			flip_horizontal(portion, &i_width, &i_height);
+			least_sum_squares(portion, template, t_width, &min_dist);
+			// 270 degrees
+			rotate_ccw_90(portion, &i_width, &i_height);
+			least_sum_squares(portion, template, t_width, &min_dist);
+			flip_horizontal(portion, &i_width, &i_height);
+			least_sum_squares(portion, template, t_width, &min_dist);
+		}
+	}
+	return min_dist;
 }
 
   
