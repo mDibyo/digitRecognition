@@ -41,36 +41,38 @@ void swap_int(int *x, int *y) {
 }
 
 /* Flips the elements of a square array ARR across the y-axis. */
-void flip_horizontal(unsigned char *arr, int *width, int *height) {
-    unsigned char width_char = (unsigned char) *width;
-    for (int i = 0; i < *height; i++) {
-    	for (int j = 0; j < (*width / 2); j++) {
-    		swap_char(arr + (*width)*i + j, arr + (*width)*i + (*width) - j - 1);
+void flip_horizontal(unsigned char *arr, int width) {
+    for (int i = 0; i < width; i++) {
+    	for (int j = 0; j < (width / 2); j++) {
+    		swap_char(arr + (width)*i + j, arr + (width)*i + (width) - j - 1);
    		}
     }
 }
 
 /* Transposes the square array ARR. */
-unsigned char * transpose(unsigned char *arr, int *width, int *height) {
+void transpose(unsigned char *arr, int width) {
     unsigned char *result;
-    result = (unsigned char*) malloc(sizeof(unsigned char) * *width * *height);
+    result = (unsigned char*) malloc(sizeof(unsigned char) * width * width);
     // printf("%d %d %d \n", (int) sizeof(*arr), (int) sizeof(unsigned char), *width);
     // int height = sizeof(arr) / sizeof(char) / width;
     // printf("%d\n", *height);
-    for (int i = 0; i < *height; i++) {
-    	for (int j = 0; j < *width; j++) {
-    		result[i + j * *height] = arr[i * *width + j];
+    for (int i = 0; i < width; i++) {
+    	for (int j = 0; j < width; j++) {
+    		result[i + j * width] = arr[i * width + j];
     	}
     }
-    swap_int(width, height);
+    // swap_int(width, height);
     // printf("tryresult\n");
     // print_bmp(result, *width, *height);
-    return result; 
+    for (int index = 0; index < (width * width); index++) {
+      arr[index] = result[index];
+    }
+    free(result);
 }
 
 /* Rotates the square array ARR by 90 degrees counterclockwise. */
-void rotate_ccw_90(unsigned char *arr, int *width, int *height) {
-    strcpy(arr, transpose(arr, width, height));
+void rotate_ccw_90(unsigned char *arr, int width) {
+    // strcpy(arr, transpose(arr, width));
     // flip_horizontal(arr, width, height);
 }
 
@@ -79,40 +81,40 @@ void rotate_ccw_90(unsigned char *arr, int *width, int *height) {
  */
 unsigned int least_sum_squares(unsigned char *i1, unsigned char *i2,
         int width, unsigned int *least_sum) {
-    FILE *fp;
-    fp = fopen("log.txt", "a");
-    fprintf(fp, "initial sum: %u\n", *least_sum);
+    // FILE *fp;
+    // fp = fopen("log.txt", "a");
+    // fprintf(fp, "initial sum: %u\n", *least_sum);
     unsigned int sum = 0, distance;
     for (int i = 0; i < (width*width); i++) {
         
         distance = (unsigned int) squared_distance(i1[i], i2[i]);
         if (distance > 0) {
-            printf("distance: %u\n", distance);
-            fprintf(fp, "distance: %u\n", distance);
+            // printf("distance: %u\n", distance);
+            // fprintf(fp, "distance: %u\n", distance);
             // sum += distance;
         } 
         sum += squared_distance(i1[i], i2[i]);
-        fprintf(fp, "sum: %u\n", sum);
+        // fprintf(fp, "sum: %u\n", sum);
     }
     // printf("sum: %u ,", sum);
-    fprintf(fp, "sum: %u ,", sum);
+    // fprintf(fp, "sum: %u ,", sum);
     // printf("least sum: %u \n", *least_sum);
-    fprintf(fp, "least sum: %u \n", *least_sum);
+    // fprintf(fp, "least sum: %u \n", *least_sum);
     if (sum < *least_sum) {
         *least_sum = sum;
     }
-    fclose(fp);
+    // fclose(fp);
 }
 
-unsigned char * extract_portion(unsigned char *image, int i, int j, int width) {
-	unsigned char *portion;
-	portion = (unsigned char*)malloc(sizeof(unsigned char)* width * width);
-	for (int x = 0; x < widht; x++) {
-		for (int y = 0; y < width; y++) {
-			portion[x*width + y] = portion[(i + x)*width + (j + y)];
+void extract_portion(unsigned char *portion, unsigned char *image,
+        int i, int j, int t_width, int i_width) {
+	// unsigned char *portion;
+	// portion = (unsigned char*)malloc(sizeof(unsigned char)* width * width);
+	for (int x = 0; x < t_width; x++) {
+		for (int y = 0; y < t_width; y++) {
+			portion[x + y*t_width] = image[(i + x) + (j + y)*i_width];
 		}
 	}
-	return portion;
 }
 
 /* Returns the squared Euclidean distance between TEMPLATE and IMAGE. The size of IMAGE
@@ -122,35 +124,38 @@ unsigned char * extract_portion(unsigned char *image, int i, int j, int width) {
 unsigned int calc_min_dist(unsigned char *image, int i_width, int i_height, 
         unsigned char *template, int t_width) {
     unsigned int min_dist = UINT_MAX;
+    unsigned char * portion;
+    portion = (unsigned char*) malloc(sizeof(unsigned char)* t_width * t_width);
     // printf("%u before", min_dist);
     // printf("+++++++++++ NEW\n");
     // print_bmp(image, i_width, i_height);
 	for (int i = 0; i <= (i_width - t_width); i++) {
-		for (int j = 0; j < (i_height - t_width); j++) {
-			strcpy(portion, extract_portion(image, i, j, t_width));
+		for (int j = 0; j <= (i_height - t_width); j++) {
+			extract_portion(portion, image, i, j, t_width, i_width);
+            // print_bmp(portion, t_width, t_width);
 			// 0 degrees
 			least_sum_squares(portion, template, t_width, &min_dist);
-			flip_horizontal(portion, &i_width, &i_height);
+			flip_horizontal(portion, t_width);
 			least_sum_squares(portion, template, t_width, &min_dist);
 			// printf("| %u after \n", min_dist);
 			// printf("flipped: \n");
 			// print_bmp(image, i_width, i_height);
 			// 90 degrees
-			rotate_ccw_90(portion, &i_width, &i_height);
+			transpose(portion, t_width);
 			// printf("transposed: \n");
 			// print_bmp(image, i_width, i_height);
 			least_sum_squares(portion, template, t_width, &min_dist);
-			flip_horizontal(portion, &i_width, &i_height);
+			flip_horizontal(portion, t_width);
 			least_sum_squares(portion, template, t_width, &min_dist);
 			// 180 degrees
-			rotate_ccw_90(portion, &i_width, &i_height);
+			transpose(portion, t_width);
 			least_sum_squares(portion, template, t_width, &min_dist);
-			flip_horizontal(portion, &i_width, &i_height);
+			flip_horizontal(portion, t_width);
 			least_sum_squares(portion, template, t_width, &min_dist);
 			// 270 degrees
-			rotate_ccw_90(portion, &i_width, &i_height);
+			transpose(portion, t_width);
 			least_sum_squares(portion, template, t_width, &min_dist);
-			flip_horizontal(portion, &i_width, &i_height);
+			flip_horizontal(portion, t_width);
 			least_sum_squares(portion, template, t_width, &min_dist);
 		}
 	}
