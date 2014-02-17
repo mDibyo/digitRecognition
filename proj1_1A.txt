@@ -7,18 +7,24 @@ CS61C Spring 2014 Project 1 Task A Writeup
 
 1. For each of the test image provided in advanced_tests/, which images are not recognized correctly?
 
-
-
-
+- sans_serif_5.bmp
+- serif_5.bmp
+- serif_8.bmp
 
 
 
 2. For each test image listed in the previous question, What is the difference in "digit distances" between the recognized digit and the digit it is supposed to be (e.g. if a digit 3 is recognized as 8, and 3 has a "digit distance" of 10 while 8 has a "digit distance" of 20, then difference in distances is 20 - 10 = 10).
 
-
-
-
+- sans_serif_5.bmp - recognized as 6, Digit Distance = 21909957 - 12939975 = 8969982
+- serif_5.bmp - recognized as 1, Digit Distance = 29336101 - 20119602 = 9216499
+- serif_8.bmp - recognized as 2, Digit Distance = 26396682 - 20280286 = 6116396
 
 
 
 3. Give a one to two sentence explanation on why you think the images mentioned above are recognized incorrectly.
+
+- sans_serif_5.bmp - The shape of the reverse-c curve in the sans serif 5 more closely matches the corresponding part of the 6 template than the 5 template. While the template 5 has a near vertical line arising from its reverse-c curve, the san serif 5 has a slanted line instead which better matches the curved (slanted) upper part of the 6 template.
+
+- serif_5.bmp - Here the reverse-c curve in the serif 5 has a much larger radius of curvature than the 5 template. The near horizontal bottom part of the reverse-c curve and the top horizontal part of the serif 5 closely resembles the correspondign parts of the 1 template. Once again, the slanted vertical line arising from the top of the reverse-c curve of the serif 5 differs considerably from the corresponding part of the 5 template leading to an increase in digit distance between these two images.
+
+- serif_8.bmp - The serif 8 has smaller rings than the 8 template (the whole digit is smaller in size) which increases the digit distance. This arrangement brings it closer to the 2 template. The top portion of the upper ring and the bottom portion of the lower ring have a similar curvature as the corresponding parts of the 2 template. This image would have been more accurately guessed if it was scaled appropriately so that the serif 8 and the 8 template had the similar ring sizes. 
