@@ -59,7 +59,6 @@ Row *dense_to_sparse(unsigned char *dense_matrix, int width, int height) {
   		}
   	}
   }
-  // print_sparse(rows);
   return rows;
 
   return NULL;
