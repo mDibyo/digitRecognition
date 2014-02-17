@@ -60,8 +60,6 @@ Row *dense_to_sparse(unsigned char *dense_matrix, int width, int height) {
   	}
   }
   return rows;
-
-  return NULL;
 }
 
 /* Frees all memory associated with SPARSE. SPARSE may be NULL. */
@@ -81,4 +79,3 @@ void free_sparse(Row *sparse) {
   	free(row);
   }
 }
-

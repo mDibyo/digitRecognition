@@ -64,7 +64,7 @@ void transpose(unsigned char *arr, int width) {
 
 /* Rotates the square array ARR by 90 degrees counterclockwise. */
 void rotate_ccw_90(unsigned char *arr, int width) {
-    
+
 }
 
 /* Find sum of squares pixel to pixel of two square images of the same size and
@@ -106,28 +106,13 @@ unsigned int calc_min_dist(unsigned char *image, int i_width, int i_height,
 	for (int i = 0; i <= (i_width - t_width); i++) {
 		for (int j = 0; j <= (i_height - t_width); j++) {
 			extract_portion(portion, image, i, j, t_width, i_width);
-			// 0 degrees
-			least_sum_squares(portion, template, t_width, &min_dist);
-			flip_horizontal(portion, t_width);
-			least_sum_squares(portion, template, t_width, &min_dist);
-			// 90 degrees
-			transpose(portion, t_width);
-			least_sum_squares(portion, template, t_width, &min_dist);
-			flip_horizontal(portion, t_width);
-			least_sum_squares(portion, template, t_width, &min_dist);
-			// 180 degrees
-			transpose(portion, t_width);
-			least_sum_squares(portion, template, t_width, &min_dist);
-			flip_horizontal(portion, t_width);
-			least_sum_squares(portion, template, t_width, &min_dist);
-			// 270 degrees
-			transpose(portion, t_width);
-			least_sum_squares(portion, template, t_width, &min_dist);
-			flip_horizontal(portion, t_width);
-			least_sum_squares(portion, template, t_width, &min_dist);
+            for (int counter = 0; counter < 4; counter++) {
+    			least_sum_squares(portion, template, t_width, &min_dist);
+    			flip_horizontal(portion, t_width);
+    			least_sum_squares(portion, template, t_width, &min_dist);
+    			transpose(portion, t_width);
+            }
 		}
 	}
 	return min_dist;
 }
-
-  
