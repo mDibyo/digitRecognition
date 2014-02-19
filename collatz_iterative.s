@@ -31,8 +31,8 @@ mod_2:	blt	$t1, $t2, end		# if (t1 < 2) goto end
 	addiu	$t1, $t1, -2		# t1 -= 2
 	j	mod_2			# goto mod_2
 end:	beq	$t1, $0, even		# if (t1 == 0) goto even
-odd:	add	$a0, $a0, $a0		# a0 += a0
-	add	$a0, $a0, $a0		# a0 += a0
+odd:	add	$t1, $a0, $a0		# t1 = 2 * a0
+	add	$a0, $a0, $t1		# a0 = a0 + t1 = 3 * a0
 	addiu	$a0, $a0, 1		# a0 += 1
 	j	after			# goto after
 even:	li	$t1, 1			# t1 = 1
