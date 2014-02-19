@@ -21,6 +21,34 @@ main:
 # 
 # Make sure to follow all function call conventions.
 collatz_iterative:
-	# YOUR CODE HERE
+	li	$t0, 1			# t0 = 1
+	li	$v0, 0			# v0 = 0
+loop:	beq 	$a0, $t0, back_to_main	# if (a0 == 1) goto back_to_main
+	addiu	$v0, $v0, 1		# v0 += 1
+	add	$t1, $a0, $0 		# t1 = a0
+	li	$t2, 2 			# t2 = 2
+mod_2:	blt	$t1, $t2, end		# if (t1 < 2) goto end
+	addiu	$t1, $t1, -2		# t1 -= 2
+	j	mod_2			# goto mod_2
+end:	beq	$t1, $0, even		# if (t1 == 0) goto even
+odd:	add	$a0, $a0, $a0		# a0 += a0
+	add	$a0, $a0, $a0		# a0 += a0
+	addiu	$a0, $a0, 1		# a0 += 1
+	j	after			# goto after
+even:	li	$t1, 1			# t1 = 1
+find_half:
+	add	$t2, $t1, $t1		# t2 = 2 * t1
+	beq	$t2, $a0, after_half	# if (t2 == a0) goto after_half
+	addiu	$t1, $t1, 1		# t1 += 1
+	j	find_half		# goto find_half
+after_half:
+	add	$a0, $t1, $0		# a0 = t0
+after:	j	loop			# loop
+back_to_main:
+	jr	$ra			# go back to main
+
+
+
+
 
 
