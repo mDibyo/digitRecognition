@@ -21,5 +21,43 @@ main:
 #
 # Make sure to follow all function call conventions.
 collatz_recursive:
-	# YOUR CODE HERE
+	li	$t0, 1			# t0 = 1
+	li	$v0, 0			# v0 = 0
+	bne	$a0, $t0, continue	# if (a0 != 0) goto continue
+	jr	$ra			# go back to calling function
+continue:
+	add 	$t1, $a0, $0		# t1 = a0
+ 	li	$t2, 2
+mod_2:	blt	$t1, $t2, end
+	addiu	$t1, $t1, -2		# t1 -= 2
+	j	mod_2
+end:	beq	$t1, $0, even		# if (t1 == 0) goto even
+odd:	add	$t1, $a0, $a0		# t1 = 2 * a0
+	add	$a0, $a0, $t1		# a0 = a0 + t1 = 3 * a0
+	addiu	$a0, $a0, 1		# a0 += 1
+	j	after_even			# goto after
+even:	li	$t1, 1			# t1 = 1
+find_half:
+	add	$t2, $t1, $t1		# t2 = 2 * t1
+	beq	$t2, $a0, after_half	# if (t2 == 0) goto after_half
+	addiu	$t1, $t1, 1		# t1 += 1
+	j	find_half		# goto find_half
+after_half:
+	add	$a0, $t1, $0		# a0 = t0
+after_even:
+	addiu	$sp, $sp, -4		# sp -= 4
+	sw	$ra, 0($sp)		# sp = ra
+	jal	collatz_recursive
+	lw	$ra, 0($sp)		# ra = lw
+	addiu	$sp, $sp, 4		# sp += 4
+	addiu	$v0, $v0, 1		# v0 += 1
+	jr	$ra
+
+  
+   
+    
+     
+      
+       
+	addiu $v0, $v0, 1		# v0 += 1 
 			

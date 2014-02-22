@@ -34,7 +34,7 @@ end:	beq	$t1, $0, even		# if (t1 == 0) goto even
 odd:	add	$t1, $a0, $a0		# t1 = 2 * a0
 	add	$a0, $a0, $t1		# a0 = a0 + t1 = 3 * a0
 	addiu	$a0, $a0, 1		# a0 += 1
-	j	after			# goto after
+	j	after_even			# goto after
 even:	li	$t1, 1			# t1 = 1
 find_half:
 	add	$t2, $t1, $t1		# t2 = 2 * t1
@@ -43,7 +43,8 @@ find_half:
 	j	find_half		# goto find_half
 after_half:
 	add	$a0, $t1, $0		# a0 = t0
-after:	j	loop			# loop
+after_even:
+	j	loop			# loop
 back_to_main:
 	jr	$ra			# go back to main
 
