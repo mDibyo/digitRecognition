@@ -52,12 +52,3 @@ after_even:
 	addiu	$sp, $sp, 4		# sp += 4
 	addiu	$v0, $v0, 1		# v0 += 1
 	jr	$ra
-
-  
-   
-    
-     
-      
-       
-	addiu $v0, $v0, 1		# v0 += 1 
-			
