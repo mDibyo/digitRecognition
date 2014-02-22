@@ -21,7 +21,7 @@ print_dense:
 	li	$t0, 0			# t0 = 0
 outer_loop:
 	bge	$t0, $a2, outer_end	# if (t0 >= a2) goto outer_end
-	jal	print_newline		# print a new line
+
 	add	$a0, $t0, $0		# a0 = t0
 	jal	print_int		# print t0
 inner_loop:
@@ -35,6 +35,7 @@ inner_loop:
 inner_end:
 	add	$a1, $s1, $0		# a1 = s1
 	addiu	$t0, $t0, 1		# t0 += 1
+	jal	print_newline		# print a new line
 	j	outer_loop		# goto outer_loop
 	
 	# retrieve return address and return

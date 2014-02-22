@@ -6,3 +6,4 @@
 # Elem e<y><x> {int col#, int value, Elem *nextelem}
 sparse2dense:
 	### YOUR CODE HERE ###
+	jr	$ra
